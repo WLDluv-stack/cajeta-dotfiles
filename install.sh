@@ -59,11 +59,10 @@ echo
 
 # --- Archivos individuales del HOME ---------------------------------------
 echo "== Archivos raiz =="
-while IFS= read -r f; do
-    name="$(basename "$f")"
+for name in .bash_logout .bashrc .fonts.conf .p10k.zsh .profile .zshrc; do
     run ln -sfn "$DOTFILES_DIR/$name" "$HOME/$name"
     LOG_OK+=("$HOME/$name")
-done < <(find "$DOTFILES_DIR" -maxdepth 1 -type f | sort)
+done
 
 # --- .oh-my-zsh/custom (plugins y temas) ----------------------------------
 echo "== Oh My Zsh custom =="
