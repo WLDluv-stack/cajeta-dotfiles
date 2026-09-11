@@ -1,0 +1,14 @@
+# Caches y temporales
+*.log
+*.zwc
+*~
+*.bak
+.cache/
+__pycache__/
+
+# Dependencias de aplicaciones que se regeneran (opencode)
+.config/opencode/node_modules/
+package-lock.json
+
+# Editor
+.DS_Store
