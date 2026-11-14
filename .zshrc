@@ -123,4 +123,4 @@ bindkey '^[[B' history-substring-search-down
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # opencode
-export PATH=/home/wld/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
