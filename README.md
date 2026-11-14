@@ -24,7 +24,7 @@ Después recarga la terminal:
 source ~/.zshrc
 ```
 
-> El instalador crea *symlinks* hacia el repositorio. Si el destino ya existe como archivo normal, lo respalda como `.bak`. Puedes previsualizar los cambios sin tocar nada con `./install.sh --dry`.
+> El instalador crea *symlinks* hacia el repositorio. Si el destino ya existe, lo respalda como `.bak` (archivos y carpetas). Puedes previsualizar los cambios sin tocar nada con `./install.sh --dry`.
 
 ## 📦 Qué incluye
 
