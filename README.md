@@ -13,7 +13,7 @@ Configuración de terminal de `wld` para Linux: **zsh + Powerlevel10k + Oh My Zs
 En una máquina nueva, solo son tres pasos:
 
 ```bash
-git clone https://github.com/WLDluv-stack/dotfiles.git ~/dotfiles
+git clone https://github.com/WLDluv-stack/cajeta-dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
