@@ -19,6 +19,11 @@ LOG_SKIP=()
 
 link_file() {
     local src="$1" dest="$2"
+    if [[ "$DRY" == true ]]; then
+        echo "  [dry] enlazar $src -> $dest (con respaldo .bak si existe)"
+        LOG_OK+=("$dest")
+        return
+    fi
     if [[ -h "$dest" ]]; then
         rm -f "$dest"
     elif [[ -e "$dest" ]]; then
@@ -31,8 +36,17 @@ link_file() {
 
 link_dir() {
     local src="$1" dest="$2"
-    [[ -d "$dest" ]] && rm -rf "$dest"
-    [[ -e "$dest" ]] && mv "$dest" "${dest}.bak"
+    if [[ "$DRY" == true ]]; then
+        echo "  [dry] enlazar dir $src -> $dest (con respaldo .bak si existe)"
+        LOG_OK+=("$dest")
+        return
+    fi
+    if [[ -h "$dest" ]]; then
+        rm -f "$dest"
+    elif [[ -e "$dest" ]]; then
+        mv "$dest" "${dest}.bak"
+        echo "  respaldo creado: ${dest} -> ${dest}.bak"
+    fi
     ln -s "$src" "$dest"
     LOG_OK+=("$dest")
 }
@@ -60,34 +74,29 @@ echo
 # --- Archivos individuales del HOME ---------------------------------------
 echo "== Archivos raiz =="
 for name in .bash_logout .bashrc .fonts.conf .p10k.zsh .profile .zshrc; do
-    run ln -sfn "$DOTFILES_DIR/$name" "$HOME/$name"
-    LOG_OK+=("$HOME/$name")
+    link_file "$DOTFILES_DIR/$name" "$HOME/$name"
 done
 
 # --- .oh-my-zsh/custom (plugins y temas) ----------------------------------
 echo "== Oh My Zsh custom =="
 mkdir_p "$HOME/.oh-my-zsh"
-run ln -sfn "$DOTFILES_DIR/.oh-my-zsh/custom" "$HOME/.oh-my-zsh/custom"
-LOG_OK+=("$HOME/.oh-my-zsh/custom")
+link_dir "$DOTFILES_DIR/.oh-my-zsh/custom" "$HOME/.oh-my-zsh/custom"
 
 # --- Neovim (config en ~/.config/nvim) ------------------------------------
 echo "== Neovim =="
 mkdir_p "$HOME/.config"
-run ln -sfn "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
-LOG_OK+=("$HOME/.config/nvim")
+link_dir "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
 
 # --- Base de LazyVim en ~/.local/share/nvim/lazy --------------------------
 echo "== LazyVim =="
 mkdir_p "$HOME/.local/share/nvim"
-run ln -sfn "$DOTFILES_DIR/nvim-lazy" "$HOME/.local/share/nvim/lazy"
-LOG_OK+=("$HOME/.local/share/nvim/lazy")
+link_dir "$DOTFILES_DIR/nvim-lazy" "$HOME/.local/share/nvim/lazy"
 
 # --- Configuraciones en ~/.config ------------------------------------------
 echo "== .config =="
 while IFS= read -r d; do
     name="$(basename "$d")"
-    run ln -sfn "$DOTFILES_DIR/.config/$name" "$HOME/.config/$name"
-    LOG_OK+=("$HOME/.config/$name")
+    link_dir "$DOTFILES_DIR/.config/$name" "$HOME/.config/$name"
 done < <(find "$DOTFILES_DIR/.config" -maxdepth 1 -mindepth 1 | sort)
 
 echo
